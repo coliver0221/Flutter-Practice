@@ -26,92 +26,148 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _LoginPageState extends State<LoginPage> {
+  /* state variables */
+  String _account = '';
+  String _password = '';
+  bool _isRememberMeSet = false;
 
-  void _incrementCounter() {
+  /* handler */
+  void _handleAccountChanged(String account) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _account = account;
+    });
+  }
+
+  void _handlePasswordChanged(String password) {
+    setState(() {
+      _password = password;
+    });
+  }
+
+  void _handleRememberMeChanged(bool newValue) {
+    setState(() {
+      _isRememberMeSet = newValue;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    return Container(
+       child: LoginForm(
+         account: _account,
+         password: _password,
+         isRememberMe: _isRememberMeSet,
+         onAccountChanged: _handleAccountChanged,
+         onPasswordChanged: _handlePasswordChanged,
+         onRememberMeChanged: _handleRememberMeChanged,
+        ),
+    );
+  }
+}
+
+class LoginForm extends StatelessWidget {
+  LoginForm({
+    Key key,
+    this.account,
+    this.password,
+    this.isRememberMe,
+    @required this.onAccountChanged,
+    @required this.onPasswordChanged,
+    @required this.onRememberMeChanged,
+  }) : super(key: key);
+
+  /* state variables & function */
+  final String account;
+  final String password;
+  final bool isRememberMe;
+  final ValueChanged<String> onAccountChanged;
+  final ValueChanged<String> onPasswordChanged;
+  final ValueChanged<bool> onRememberMeChanged;
+
+  /* Form controller */
+  final TextEditingController _accountControllor = new TextEditingController();
+  final TextEditingController _passwordControllor = new TextEditingController();
+  final GlobalKey _formKey = new GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      resizeToAvoidBottomInset: false, //prevent resize when keyboard open
+      appBar: AppBar(title: Text('Login Page Demo')),
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(30, 50, 30, 100),
+        child: Form(
+          key: _formKey,
+          autovalidate: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              // logo
+              Image(
+                image: AssetImage("assets/logo.png"),
+              ),
+              // account input field
+              TextFormField(
+                controller: _accountControllor,
+                decoration: InputDecoration(
+                  labelText: "識別證號",
+                  icon: Icon(Icons.person),
+                ),
+                validator: (v) {
+                  return v.trim().length >= 6 && v.trim().length <= 32 ? null : "識別證號長度不合法";
+                },
+              ),
+              // password input field
+              TextFormField(
+                controller: _passwordControllor,
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                  labelText: "生日",
+                  hintText: "2000-01-01",
+                  icon: Icon(Icons.lock),
+                ),
+                validator: (v) {
+                  return RegExp(r"(^\d{4}-\d{2}-\d{2}$)").hasMatch(v.trim()) ? null : "生日格式不合法";
+                },
+              ),
+              // remember me checkbox
+              CheckboxListTile(
+                title: Text("記住我"),
+                value: isRememberMe,
+                activeColor: Colors.blue,
+                onChanged: onRememberMeChanged,
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              // login button
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    print("Button Click!");
+                  },  
+                  child: Text("登入")
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
