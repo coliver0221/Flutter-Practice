@@ -102,6 +102,10 @@ class LoginForm extends StatelessWidget {
   final TextEditingController _passwordControllor = new TextEditingController();
   final GlobalKey _formKey = new GlobalKey<FormState>();
 
+  /* FocusNode for TextFormField */
+  final FocusNode focusNode1 = new FocusNode();
+  final FocusNode focusNode2 = new FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +127,7 @@ class LoginForm extends StatelessWidget {
               // account input field
               TextFormField(
                 controller: _accountControllor,
+                focusNode: focusNode1,
                 decoration: InputDecoration(
                   labelText: "識別證號",
                   icon: Icon(Icons.person),
@@ -130,10 +135,14 @@ class LoginForm extends StatelessWidget {
                 validator: (v) {
                   return v.trim().length >= 6 && v.trim().length <= 32 ? null : "識別證號長度不合法";
                 },
+                onFieldSubmitted: (String s) {
+                  FocusScope.of(context).requestFocus(focusNode2);
+                },
               ),
               // password input field
               TextFormField(
                 controller: _passwordControllor,
+                focusNode: focusNode2,
                 keyboardType: TextInputType.datetime,
                 decoration: InputDecoration(
                   labelText: "生日",
@@ -142,6 +151,10 @@ class LoginForm extends StatelessWidget {
                 ),
                 validator: (v) {
                   return RegExp(r"(^\d{4}-\d{2}-\d{2}$)").hasMatch(v.trim()) ? null : "生日格式不合法";
+                },
+                onFieldSubmitted: (String s) {
+                  focusNode1.unfocus();
+                  focusNode2.unfocus();
                 },
               ),
               // remember me checkbox
@@ -159,7 +172,9 @@ class LoginForm extends StatelessWidget {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
-                    print("Button Click!");
+                    print("Account: $account");
+                    print("Password: $password");
+                    print("isRememberMe: $isRememberMe");
                   },  
                   child: Text("登入")
                 ),
