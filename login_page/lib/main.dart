@@ -26,23 +26,32 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginPage(),
+      home: Login(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+class Login extends StatefulWidget {
+  Login({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginState extends State<Login> {
   /* state variables */
   String _account = '';
   String _password = '';
-  bool _isRememberMeSet = false;
+  bool _isRememberMe = false;
+
+  /* Form controller */
+  TextEditingController _accountControllor = new TextEditingController();
+  TextEditingController _passwordControllor = new TextEditingController();
+  GlobalKey _formKey = new GlobalKey<FormState>();
+
+  /* FocusNode for TextFormField */
+  FocusNode focusNode1 = new FocusNode();
+  FocusNode focusNode2 = new FocusNode();
 
   /* handler */
   void _handleAccountChanged(String account) {
@@ -59,52 +68,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleRememberMeChanged(bool newValue) {
     setState(() {
-      _isRememberMeSet = newValue;
+      _isRememberMe = newValue;
     });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-       child: LoginForm(
-         account: _account,
-         password: _password,
-         isRememberMe: _isRememberMeSet,
-         onAccountChanged: _handleAccountChanged,
-         onPasswordChanged: _handlePasswordChanged,
-         onRememberMeChanged: _handleRememberMeChanged,
-        ),
-    );
-  }
-}
-
-class LoginForm extends StatelessWidget {
-  LoginForm({
-    Key key,
-    this.account,
-    this.password,
-    this.isRememberMe,
-    @required this.onAccountChanged,
-    @required this.onPasswordChanged,
-    @required this.onRememberMeChanged,
-  }) : super(key: key);
-
-  /* state variables & function */
-  final String account;
-  final String password;
-  final bool isRememberMe;
-  final ValueChanged<String> onAccountChanged;
-  final ValueChanged<String> onPasswordChanged;
-  final ValueChanged<bool> onRememberMeChanged;
-
-  /* Form controller */
-  final TextEditingController _accountControllor = new TextEditingController();
-  final TextEditingController _passwordControllor = new TextEditingController();
-  final GlobalKey _formKey = new GlobalKey<FormState>();
-
-  /* FocusNode for TextFormField */
-  final FocusNode focusNode1 = new FocusNode();
-  final FocusNode focusNode2 = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +98,7 @@ class LoginForm extends StatelessWidget {
                   labelText: "識別證號",
                   icon: Icon(Icons.person),
                 ),
+                onChanged: (value) => _handleAccountChanged(value),
                 validator: (v) {
                   return v.trim().length >= 6 && v.trim().length <= 32 ? null : "識別證號長度不合法";
                 },
@@ -149,6 +116,7 @@ class LoginForm extends StatelessWidget {
                   hintText: "2000-01-01",
                   icon: Icon(Icons.lock),
                 ),
+                onChanged: (value) => _handlePasswordChanged(value),
                 validator: (v) {
                   return RegExp(r"(^\d{4}-\d{2}-\d{2}$)").hasMatch(v.trim()) ? null : "生日格式不合法";
                 },
@@ -160,9 +128,9 @@ class LoginForm extends StatelessWidget {
               // remember me checkbox
               CheckboxListTile(
                 title: Text("記住我"),
-                value: isRememberMe,
+                value: _isRememberMe,
                 activeColor: Colors.blue,
-                onChanged: onRememberMeChanged,
+                onChanged: _handleRememberMeChanged,
                 controlAffinity: ListTileControlAffinity.leading,
               ),
               // login button
@@ -172,9 +140,9 @@ class LoginForm extends StatelessWidget {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
-                    print("Account: $account");
-                    print("Password: $password");
-                    print("isRememberMe: $isRememberMe");
+                    print("Account: $_account");
+                    print("Password: $_password");
+                    print("isRememberMe: $_isRememberMe");
                   },  
                   child: Text("登入")
                 ),
