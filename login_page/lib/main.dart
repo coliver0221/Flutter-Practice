@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,19 +29,19 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
+      home: LoginPage(),
     );
   }
 }
 
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   /* state variables */
   String _account = '';
   String _password = '';
@@ -70,6 +73,38 @@ class _LoginState extends State<Login> {
     setState(() {
       _isRememberMe = newValue;
     });
+  }
+
+  _login() async {
+    const String API_ENDPOINT = 'http://10.8.2.110:5000';
+    // Init Dio
+    Dio _dio = Dio();
+
+    try {
+      var res = await _dio.post(
+        '$API_ENDPOINT/login',
+        data: {
+          "account": _account,
+          "password": _password,
+          "role": "user",
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      print(res);
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.toString());
+        print(data);
+        print(data['bearer']);
+      } else {
+        throw res.toString();
+      }
+    } catch (exception) {
+      print(exception);
+    }
   }
 
   @override
@@ -140,9 +175,7 @@ class _LoginState extends State<Login> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
-                    print("Account: $_account");
-                    print("Password: $_password");
-                    print("isRememberMe: $_isRememberMe");
+                    _login();
                   },  
                   child: Text("登入")
                 ),
