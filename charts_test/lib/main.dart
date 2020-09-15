@@ -1,3 +1,7 @@
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_test/barChart.dart';
+import 'package:charts_test/heartRateSeries.dart';
+import 'package:charts_test/lineChart.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,34 +17,60 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        '/': (context) => HomePage(),
+      },    
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatelessWidget {
+  /// create heart rate data
+  final List<HeartRateSeries> heartRateData = [
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:00"),
+      heartRate: 90,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:10"),
+      heartRate: 97,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:20"),
+      heartRate: 86,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:30"),
+      heartRate: 83,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:40"),
+      heartRate: 81,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T15:59:50"),
+      heartRate: 84,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+  ];
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        backgroundColor: Colors.blue,
+        title: Text('Charts Testing')
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Hello World!',
-            ),
+            Expanded(child: MyBarChart(data: heartRateData)),
+            Expanded(child: MyLineChart(data: heartRateData)),
           ],
         ),
       ),
