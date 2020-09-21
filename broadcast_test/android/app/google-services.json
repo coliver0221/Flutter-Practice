@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "721695583827",
+    "firebase_url": "https://broadcast-testing.firebaseio.com",
+    "project_id": "broadcast-testing",
+    "storage_bucket": "broadcast-testing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721695583827:android:44dd057dc2f8dc2f39e0a6",
+        "android_client_info": {
+          "package_name": "com.example.broadcast_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721695583827-od9gt9qcfmpf8ah4gjhgl9j54lfsth4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAepPWReoSMlRVNWPR9XSJhADo3PUfwgLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721695583827-od9gt9qcfmpf8ah4gjhgl9j54lfsth4j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
