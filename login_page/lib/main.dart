@@ -69,11 +69,11 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _handleRememberMeChanged(bool newValue) {
-    setState(() {
-      _isRememberMe = newValue;
-    });
-  }
+  // void _handleRememberMeChanged(bool newValue) {
+  //   setState(() {
+  //     _isRememberMe = newValue;
+  //   });
+  // }
 
   _login() async {
     const String API_ENDPOINT = 'http://10.8.2.110:5000';
@@ -110,10 +110,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, //prevent resize when keyboard open
+      // resizeToAvoidBottomInset: false, //prevent resize when keyboard open
       appBar: AppBar(title: Text('Login Page Demo')),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(30, 50, 30, 100),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
         child: Form(
           key: _formKey,
           autovalidate: true,
@@ -122,52 +122,63 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               // logo
-              Image(
-                image: AssetImage("assets/logo.png"),
+              // Image(
+              //   image: AssetImage("assets/logo.png"),
+              // ),
+              Container(
+                height: 250,
+                width: double.infinity,
+                color: Colors.blue,
               ),
               // account input field
-              TextFormField(
-                controller: _accountControllor,
-                focusNode: focusNode1,
-                decoration: InputDecoration(
-                  labelText: "識別證號",
-                  icon: Icon(Icons.person),
+              SizedBox(
+                height: 100.0,
+                child: TextFormField(
+                  controller: _accountControllor,
+                  focusNode: focusNode1,
+                  decoration: InputDecoration(
+                    labelText: "識別證號",
+                    icon: Icon(Icons.person),
+                  ),
+                  onChanged: (value) => _handleAccountChanged(value),
+                  validator: (v) {
+                    return v.trim().length >= 6 && v.trim().length <= 32 ? null : "識別證號長度不合法";
+                  },
+                  onFieldSubmitted: (String s) {
+                    FocusScope.of(context).requestFocus(focusNode2);
+                  },
                 ),
-                onChanged: (value) => _handleAccountChanged(value),
-                validator: (v) {
-                  return v.trim().length >= 6 && v.trim().length <= 32 ? null : "識別證號長度不合法";
-                },
-                onFieldSubmitted: (String s) {
-                  FocusScope.of(context).requestFocus(focusNode2);
-                },
               ),
               // password input field
-              TextFormField(
-                controller: _passwordControllor,
-                focusNode: focusNode2,
-                keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(
-                  labelText: "生日",
-                  hintText: "2000-01-01",
-                  icon: Icon(Icons.lock),
+              SizedBox(
+                height: 100.0,
+                child: TextFormField(
+                  controller: _passwordControllor,
+                  focusNode: focusNode2,
+                  keyboardType: TextInputType.datetime,
+                  decoration: InputDecoration(
+                    labelText: "生日",
+                    hintText: "2000-01-01",
+                    icon: Icon(Icons.lock),
+                  ),
+                  onChanged: (value) => _handlePasswordChanged(value),
+                  validator: (v) {
+                    return RegExp(r"(^\d{4}-\d{2}-\d{2}$)").hasMatch(v.trim()) ? null : "生日格式不合法";
+                  },
+                  onFieldSubmitted: (String s) {
+                    focusNode1.unfocus();
+                    focusNode2.unfocus();
+                  },
                 ),
-                onChanged: (value) => _handlePasswordChanged(value),
-                validator: (v) {
-                  return RegExp(r"(^\d{4}-\d{2}-\d{2}$)").hasMatch(v.trim()) ? null : "生日格式不合法";
-                },
-                onFieldSubmitted: (String s) {
-                  focusNode1.unfocus();
-                  focusNode2.unfocus();
-                },
               ),
               // remember me checkbox
-              CheckboxListTile(
-                title: Text("記住我"),
-                value: _isRememberMe,
-                activeColor: Colors.blue,
-                onChanged: _handleRememberMeChanged,
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
+              // CheckboxListTile(
+              //   title: Text("記住我"),
+              //   value: _isRememberMe,
+              //   activeColor: Colors.blue,
+              //   onChanged: _handleRememberMeChanged,
+              //   controlAffinity: ListTileControlAffinity.leading,
+              // ),
               // login button
               SizedBox(
                 width: double.infinity,
