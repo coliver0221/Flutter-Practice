@@ -16,7 +16,7 @@ class HeartRateChart extends StatelessWidget {
         data: data,
         domainFn: (HeartRateSeries series, _) => series.time,
         measureFn: (HeartRateSeries series, _) => series.heartRate,
-        // colorFn: (HeartRateSeries series, _) => series.barColor
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
       )
     ];
 
