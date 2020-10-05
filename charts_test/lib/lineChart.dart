@@ -38,6 +38,15 @@ class MyLineChart extends StatelessWidget {
                   primaryMeasureAxis: charts.NumericAxisSpec(
                     tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false)
                   ),
+                  behaviors: [
+                    charts.RangeAnnotation([
+                      charts.LineAnnotationSegment(
+                        DateTime.parse("20200915T17:30:00"),
+                        charts.RangeAnnotationAxisType.domain,
+                        color: charts.ColorUtil.fromDartColor(Colors.green),
+                      ),
+                    ]),
+                  ],
                 )
               ),
             ],

@@ -28,32 +28,37 @@ class HomePage extends StatelessWidget {
   /// create heart rate data
   final List<HeartRateSeries> heartRateData = [
     HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:00"),
+      time: DateTime.parse("20200915T15:00:00"),
       heartRate: 90,
       barColor: charts.ColorUtil.fromDartColor(Colors.red)
     ),
     HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:10"),
-      heartRate: 97,
-      barColor: charts.ColorUtil.fromDartColor(Colors.red)
-    ),
-    HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:20"),
+      time: DateTime.parse("20200915T16:00:00"),
       heartRate: 86,
       barColor: charts.ColorUtil.fromDartColor(Colors.red)
     ),
     HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:30"),
+      time: DateTime.parse("20200915T17:00:00"),
+      heartRate: 97,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T18:00:00"),
+      heartRate: 86,
+      barColor: charts.ColorUtil.fromDartColor(Colors.red)
+    ),
+    HeartRateSeries(
+      time: DateTime.parse("20200915T19:00:00"),
       heartRate: 83,
       barColor: charts.ColorUtil.fromDartColor(Colors.red)
     ),
     HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:40"),
+      time: DateTime.parse("20200915T20:00:00"),
       heartRate: 81,
       barColor: charts.ColorUtil.fromDartColor(Colors.red)
     ),
     HeartRateSeries(
-      time: DateTime.parse("20200915T15:59:50"),
+      time: DateTime.parse("20200915T21:00:00"),
       heartRate: 84,
       barColor: charts.ColorUtil.fromDartColor(Colors.red)
     ),
