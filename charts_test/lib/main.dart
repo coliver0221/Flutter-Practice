@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_test/barChart.dart';
 import 'package:charts_test/heartRateSeries.dart';
 import 'package:charts_test/lineChart.dart';
+import 'package:charts_test/lineChartWithPoint.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -74,7 +75,8 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            Expanded(child: MyBarChart(data: heartRateData)),
+            // Expanded(child: MyBarChart(data: heartRateData)),
+            Expanded(child: MyLineChartWithPoint(data: heartRateData)),
             Expanded(child: MyLineChart(data: heartRateData)),
           ],
         ),

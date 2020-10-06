@@ -45,6 +45,11 @@ class MyLineChart extends StatelessWidget {
                         charts.RangeAnnotationAxisType.domain,
                         color: charts.ColorUtil.fromDartColor(Colors.green),
                       ),
+                      charts.LineAnnotationSegment(
+                        DateTime.parse("20200915T18:00:00"),
+                        charts.RangeAnnotationAxisType.domain,
+                        color: charts.ColorUtil.fromDartColor(Colors.green),
+                      ),
                     ]),
                   ],
                 )

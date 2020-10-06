@@ -9,7 +9,7 @@ class HeartRateSeries {
 
   HeartRateSeries({
     @required this.time,
-    @required this.heartRate,
-    @required this.barColor
+    this.heartRate,
+    this.barColor
   });
 }
