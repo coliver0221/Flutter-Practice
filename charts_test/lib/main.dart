@@ -3,6 +3,7 @@ import 'package:charts_test/barChart.dart';
 import 'package:charts_test/heartRateSeries.dart';
 import 'package:charts_test/lineChart.dart';
 import 'package:charts_test/lineChartWithPoint.dart';
+import 'package:charts_test/lineChartWithSelectionCallBack.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -77,7 +78,9 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             // Expanded(child: MyBarChart(data: heartRateData)),
             Expanded(child: MyLineChartWithPoint(data: heartRateData)),
-            Expanded(child: MyLineChart(data: heartRateData)),
+            // Expanded(child: MyLineChart(data: heartRateData)),
+            // Expanded(child: MyLineChartWithMark(data: heartRateData)),
+            Expanded(child: LineChartWithSelectoinCallBack(data: heartRateData)),
           ],
         ),
       ),
