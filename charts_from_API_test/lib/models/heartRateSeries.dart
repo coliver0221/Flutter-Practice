@@ -1,4 +1,3 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
 
 /// Define heartrate data
@@ -9,7 +8,7 @@ class HeartRateSeries {
 
   HeartRateSeries({
     @required this.time,
-    @required this.heartRate,
+    this.heartRate,
     // @required this.barColor
   });
 }

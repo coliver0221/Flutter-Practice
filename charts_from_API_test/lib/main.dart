@@ -38,40 +38,43 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _bearer = '';
   List<HeartRateSeries> _heartRateData = [];
+  List<HeartRateSeries> _annotaionData = [];
   List<TemperatureSeries> _temperatureData = [];
   List<bool> _toggleSelect = [true, false, false];
-  DateTime _selectedDate = DateTime.now().subtract(Duration(days: 1));
-  String _displayTime = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)));
+  // DateTime _selectedDate = DateTime.now().subtract(Duration(days: 1));
+  DateTime _selectedDate = DateTime(2020, 9, 24);
+  // String _displayTime = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)));
+  String _displayTime = DateFormat('yyyy-MM-dd').format(DateTime(2020, 9, 24));
   String _range = rangeList[0];
 
   Dio _dio = Dio();
 
   void _getDisplayData() async {
-    // print('----LOGIN----');
-    // try {
-    //   var res = await _dio.post(
-    //     'http://140.116.247.117:11050/login',
-    //     data: {
-    //       "account": 'Oliver1',
-    //       "password": '2020-01-01',
-    //       "role": "user",
-    //     },
-    //     options: Options(
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     ),
-    //   );
-    //   if (res.statusCode == 200) {
-    //     var data = jsonDecode(res.toString());
-    //     setState(() {
-    //       _bearer = data['bearer'];
-    //     });
-    //     print(_bearer);
-    //   }
-    // } on DioError catch (exception) {
-    //   print(exception.error.toString());
-    // }
+    print('----LOGIN----');
+    try {
+      var res = await _dio.post(
+        'http://140.116.247.117:11050/login',
+        data: {
+          "account": 'Oliver1',
+          "password": '2020-01-01',
+          "role": "user",
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.toString());
+        setState(() {
+          _bearer = data['bearer'];
+        });
+        print(_bearer);
+      }
+    } on DioError catch (exception) {
+      print(exception.error.toString());
+    }
 
     print('----GETDATA----');
     print('start date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}');
@@ -87,25 +90,26 @@ class _MyHomePageState extends State<MyHomePage> {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': 'Bearer $_bearer',
-            'Authorization': 'Bearer 81b4dc91adf59b0c0a8e72e8df2e075d3a593db77348551b840c7fc694768ee2',
+            'Authorization': 'Bearer $_bearer',
+            // 'Authorization': 'Bearer 81b4dc91adf59b0c0a8e72e8df2e075d3a593db77348551b840c7fc694768ee2',
           }
         ),
       );
       if (res.statusCode == 200) {
         var data = jsonDecode(res.toString());
-        _dataReformat(data['data']);
+        _dataReformat(data['data'], data['analysis']);
       }
     } on DioError catch (exception) {
       print(exception.error.toString());
     }
   }
 
-  void _dataReformat(List<dynamic> data) {
+  void _dataReformat(List<dynamic> data, List<dynamic> analysis) {
     print('----START REFORMAT----');
     setState(() {
       _heartRateData.clear();
       _temperatureData.clear();
+      _annotaionData.clear();
       for (var record in data) {
         // print(record);
         _heartRateData.add(HeartRateSeries(
@@ -116,6 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
           time: DateTime.parse(record[0]),
           temperature: record[2],
         ));
+      }
+      for (var alertTime in analysis) {
+        _annotaionData.add(HeartRateSeries(
+          time: DateTime.parse(alertTime),
+        )
+        );
       }
     });
     print('----END REFORMAT----');
@@ -230,24 +240,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomePage'),
+        title: Text('歷史查詢'),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  '歷史查詢',
-                  style: TextStyle(
-                    fontSize: 35,
-                  ),
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: Container(
+            //     alignment: Alignment.centerLeft,
+            //     padding: EdgeInsets.symmetric(horizontal: 16.0),
+            //     child: Text(
+            //       '歷史查詢',
+            //       style: TextStyle(
+            //         fontSize: 35,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Expanded(
               flex: 1,
               child: ToggleButtons(
@@ -290,7 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               flex: 4,
-              child: HeartRateChart(data: _heartRateData)
+              child: HeartRateChart(data: _heartRateData, annotationPoint: _annotaionData)
             ),
             Expanded(
               flex: 4,
