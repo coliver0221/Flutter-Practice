@@ -70,7 +70,10 @@ class _LineChartWithSelectoinCallBackState extends State<LineChartWithSelectoinC
           behaviors: [
             charts.LinePointHighlighter(
               symbolRenderer: CustomCircleSymbolRenderer(),
-            )
+            ),
+            charts.SelectNearest(
+              eventTrigger: charts.SelectionTrigger.tapAndDrag
+            ),
           ],
           selectionModels: [
             charts.SelectionModelConfig(
@@ -113,7 +116,7 @@ class CustomCircleSymbolRenderer extends charts.CircleSymbolRenderer {
     textStyle.fontSize = 15;
     canvas.drawText(
       TextElement(
-        '${DateFormat('MM-dd').format(_LineChartWithSelectoinCallBackState.selectedTime)}\n${DateFormat('HH:mm').format(_LineChartWithSelectoinCallBackState.selectedTime)}\n${_LineChartWithSelectoinCallBackState.selectedValue} BPM',
+        '${DateFormat('MM/dd HH:mm').format(_LineChartWithSelectoinCallBackState.selectedTime)}\n${_LineChartWithSelectoinCallBackState.selectedValue} BPM',
         style: textStyle
       ),
       (bounds.left).round(),
