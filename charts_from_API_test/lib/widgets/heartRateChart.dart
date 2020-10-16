@@ -1,13 +1,29 @@
+import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_flutter/src/text_style.dart' as chartStyle;
+import 'package:charts_flutter/src/text_element.dart';
 import 'package:charts_from_API_test/models/heartRateSeries.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HeartRateChart extends StatelessWidget {
   final List<HeartRateSeries> data;
   final List<HeartRateSeries> annotationPoint;
+  static int selectedValue;
+  static DateTime selectedTime;
 
   /// Constructure
   HeartRateChart({@required this.data, this.annotationPoint});
+
+  void _onSelectionChanged(charts.SelectionModel model) {
+    final selectedDatum = model.selectedDatum;
+
+    if (selectedDatum.isNotEmpty) {
+      selectedTime = selectedDatum.first.datum.time;
+      selectedValue = selectedDatum.last.datum.heartRate;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +70,20 @@ class HeartRateChart extends StatelessWidget {
                   primaryMeasureAxis: charts.NumericAxisSpec(
                     tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false)
                   ),
+                  behaviors: [
+                    charts.LinePointHighlighter(
+                      symbolRenderer: CustomCircleSymbolRenderer(),
+                      showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.nearest
+                    ),
+                    charts.SelectNearest(
+                      eventTrigger: charts.SelectionTrigger.tapAndDrag
+                    ),
+                  ],
+                  selectionModels: [
+                    charts.SelectionModelConfig(
+                      changedListener: _onSelectionChanged,
+                    )
+                  ],
                   customSeriesRenderers: [
                     charts.SymbolAnnotationRendererConfig(
                       // ID used to link series to this renderer.
@@ -67,6 +97,29 @@ class HeartRateChart extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomCircleSymbolRenderer extends charts.CircleSymbolRenderer {
+  DateTime time;
+  int value;
+
+  CustomCircleSymbolRenderer({this.time, this.value});
+
+  @override
+  void paint(charts.ChartCanvas canvas, Rectangle<num> bounds, {List<int> dashPattern, charts.Color fillColor, charts.FillPatternType fillPattern, charts.Color strokeColor, double strokeWidthPx}) {
+    super.paint(canvas, bounds, dashPattern: dashPattern, fillColor: fillColor, fillPattern: fillPattern, strokeColor: strokeColor, strokeWidthPx: strokeWidthPx);
+    var textStyle = chartStyle.TextStyle();
+    textStyle.color = charts.Color.black;
+    textStyle.fontSize = 15;
+    canvas.drawText(
+      TextElement(
+        '${DateFormat('MM/dd HH:mm').format(HeartRateChart.selectedTime)}\n${HeartRateChart.selectedValue} BPM',
+        style: textStyle
+      ),
+      (bounds.left).round(),
+      (bounds.top - 28).round()
     );
   }
 }
